@@ -1,0 +1,93 @@
+      ****************ENVIRONMENT DIVISION***************** 
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. P1.
+       AUTHOR. GABRIELLA-DESTRO.
+       DATE-WRITTEN. 14/05/2020. 
+       DATE-COMPILED. 14/05/2020.
+      *Este programa gera os arquivos aprov.dat e reprov.dat
+      *copiando neles o arquivo alunos.dat
+
+      ****************ENVIRONMENT DIVISION*****************  
+       ENVIRONMENT DIVISION.
+       SOURCE-COMPUTER. PC.
+       OBJECT-COMPUTER. PC. 
+       SPECIAL-NAMES. DECIMAL-POINT IS COMMA. 
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT ALUNOS ASSIGN DISK
+           ORGANIZATION IS LINE SEQUENTIAL.
+           SELECT APROV ASSIGN DISK
+           ORGANIZATION IS LINE SEQUENTIAL.
+           SELECT REPROV ASSIGN DISK
+           ORGANIZATION IS LINE SEQUENTIAL.
+
+      ****************DATA DIVISION*****************  
+       DATA DIVISION.
+       FILE SECTION.
+
+       FD ALUNOS 
+       LABEL RECORDS STANDARD
+           VALUE OF FILE-ID IS "ALUNOS.DAT".
+
+       01 REGALUNO.       
+           05 NUMALU PIC 9(6).
+           05 NOMALU PIC X(20). 
+           05 NOTALU PIC 9(2).
+
+       FD APROV
+       LABEL RECORDS STANDARD
+           VALUE OF FILE-ID IS "APROV.DAT".
+
+       01 REGAPROV. 
+           05 NUMAP PIC 9(6).
+           05 NOMAP PIC X(20). 
+           05 CONCAP PIC X(1).
+
+       FD REPROV
+       LABEL RECORDS STANDARD
+           VALUE OF FILE-ID IS "REPROV.DAT".
+
+       01 REGREPROV. 
+           05 NUMREP PIC 9(6).
+           05 NOMREP PIC X(20). 
+           05 CONCREP PIC X(1).
+
+       WORKING-STORAGE SECTION.
+       77  FIM PIC X VALUE SPACES.
+
+      ****************PROCEDURE DIVISION*****************  
+       PROCEDURE DIVISION.
+
+       CONTROLE.
+       PERFORM ABRIR.
+       PERFORM LEITURA.
+       PERFORM ROTINA UNTIL FIM EQUAL "*". 
+       PERFORM FECHAR. 
+       STOP RUN.
+
+
+       ABRIR.
+           OPEN INPUT ALUNOS 
+                 OUTPUT APROV REPROV.
+
+       LEITURA.
+           READ ALUNOS
+                 AT END MOVE "*" TO FIM. 
+
+       ROTINA.
+           PERFORM GRAVAR.
+           PERFORM LEITURA.
+
+       GRAVAR.
+           MOVE NUMALU TO NUMAP.
+           MOVE NUMALU TO NUMREP. 
+           MOVE NOMALU TO NOMAP.
+           MOVE NOMALU TO NOMREP.
+           MOVE NOTALU TO CONCAP.
+           MOVE NOTALU TO CONCREP.
+           WRITE REGREPROV.
+           WRITE REGAPROV.
+
+       FECHAR.
+           CLOSE ALUNOS APROV REPROV. 
+           
