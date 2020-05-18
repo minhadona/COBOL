@@ -1,0 +1,78 @@
+LAYOUT 1:
+
+                               RELATÓRIO DE PRODUTOS                                                           PAG 999
+                               
+   CÓDIGO DO PRODUTO                       DESCRIÇÃO DOS PRODUTOS                       QUANTIDADE
+         999                               XXXXXXXXXXXXXXXXXXXXX                           9999
+
+---------------------------------------------
+exercicio 1:
+
+
+       01 LINHA1.
+           05 PT1L1 PIC X(28) VALUE SPACES. 
+           05 PT2L1 PIC X(21) VALUE "RELATORIO DE PRODUTOS".
+           05 PT3L1 PIC X(18) VALUE SPACES.
+           05 PT4L1 PIC X(05) VALUE "PAG:".
+           05 PAGINA PIC 9(02) VALUE ZEROS. 
+           05 FIML1 PIC X(06) VALUE SPACES. 
+
+       01 LINHA2. 
+           05 PT1L2 PIC X(04) VALUE SPACES.
+           05 PT2L2 PIC X(17) VALUE "CODIGO DO PRODUTO".
+           05 PT3L2 PIC X(07) VALUE SPACES.
+           05 PT4L2 PIC X(22) VALUE "DESCRICAO DOS PRODUTOS".
+           05 PT5L2 PIC X(07) VALUE SPACES.
+           05 PT6L2 PIC X(10) VALUE "QUANTIDADE".
+           05 FIML2 PIC X(13) VALUE SPACES. 
+
+       01 LINHA3.
+           05 PT1L3 PIC X(11) VALUE SPACES.
+           05 PT2L3 PIC 9(03) VALUE ZEROS. 
+           05 PT3L3 PIC X(14) VALUE SPACES.
+           05 PT4L3 PIC X(20) VALUE SPACES. 
+           05 PT5L3 PIC X(11) VALUE SPACES.
+           05 PT6L3 PIC 9(4) VALUE ZEROS. 
+           05 FIML3 PIC X(17) VALUE SPACES.
+************************************************************************************************************************
+LAYOUT 2:
+
+                                          RELATÓRIO DE ESTOQUE                                                 PAG 999
+                               
+   CÓDIGO DO MATERIAL                        DESCRIÇÃO                         QUANTIDADE EM ESTOQUE          ARMAZEM
+         99999                            XXXXXXXXXXXXXXXXXXXXX                           9999             XXXXXXXXXXXXX
+         
+---------------------------------------------
+
+
+exercicio 2:
+
+       01 LINHA1.
+           05 PT1L1 PIC X(30) VALUE SPACES. 
+           05 PT2L1 PIC X(20) VALUE "RELATORIO DE ESTOQUE".
+           05 PT3L1 PIC X(19) VALUE SPACES.
+           05 PT4L1 PIC X(05) VALUE "PAG:".
+           05 PAGINA PIC 9(02) VALUE ZEROS. 
+           05 FIML1 PIC X(06) VALUE SPACES. 
+
+       01 LINHA2. 
+           05 PT1L2 PIC X(02) VALUE SPACES.
+           05 PT2L2 PIC X(18) VALUE "CODIGO DO MATERIAL".
+           05 PT3L2 PIC X(02) VALUE SPACES.
+           05 PT4L2 PIC X(09) VALUE "DESCRICAO".
+           05 PT5L2 PIC X(13) VALUE SPACES. 
+           05 PT6L2 PIC X(21) VALUE "QUANTIDADE EM ESTOQUE".
+           05 PT7L2 PIC X(04) VALUE SPACES.
+           05 PT7L2 PIC X(07) VALUE "ARMAZEM". 
+           05 FIML2 PIC X(06) VALUE SPACES.
+
+       01 LINHA3.
+           05 PT1L3 PIC X(10) VALUE SPACES.
+           05 PT2L3 PIC 9(05) VALUE ZEROS. 
+           05 PT3L3 PIC X(07) VALUE SPACES.
+           05 PT4L3 PIC X(20) VALUE SPACES.
+           05 PT5L3 PIC X(12) VALUE SPACES. 
+           05 PT6L3 PIC 9(04) VALUE ZEROS.
+           05 PT7L3 PIC X(10) VALUE SPACES.
+           05 PT8L3 PIC X(13) VALUE SPACES.
+           05 FIML3 PIC X(01) VALUE SPACES.
