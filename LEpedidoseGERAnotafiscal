@@ -1,0 +1,79 @@
+      ****************ENVIRONMENT DIVISION***************** 
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. P1.
+       AUTHOR. GABRIELLA-DESTRO.
+       DATE-WRITTEN. 28/05/2020. 
+       DATE-COMPILED. 28/05/2020.
+      *Este programa ARQUIVO DE NOTAS FISCAIS (NOTAS.DAT) A 
+      *PARTIR DO ARQUIVO DE PEDIDOS (PEDIDOS.DAT)
+
+      ****************ENVIRONMENT DIVISION*****************  
+       ENVIRONMENT DIVISION.
+       SOURCE-COMPUTER. PC.
+       OBJECT-COMPUTER. PC. 
+       SPECIAL-NAMES. DECIMAL-POINT IS COMMA. 
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT PEDIDOS ASSIGN DISK
+           ORGANIZATION IS LINE SEQUENTIAL.
+           SELECT NOTAS ASSIGN DISK
+           ORGANIZATION IS LINE SEQUENTIAL.
+
+      ****************DATA DIVISION*****************  
+       DATA DIVISION.
+       FILE SECTION.
+
+       FD PEDIDOS 
+       LABEL RECORDS STANDARD
+           VALUE OF FILE-ID IS "PEDIDOS.DAT".
+
+       01 REGPEDIDO.       
+           05 NUMPED PIC 9(6).
+           05 CODPROD PIC X(6). 
+           05 CUSTOPROD PIC 9(4).
+           05 IMPFED PIC 9(3).
+           05 IMPEST PIC 9(3).
+           05 IMPMUN PIC 9(3).
+
+       FD NOTAS
+       LABEL RECORDS STANDARD
+           VALUE OF FILE-ID IS "NOTAS.DAT".
+
+       01 REGNOTA. 
+           05 PRODUTO PIC X(6).
+           05 PRECFINAL PIC 9(6).
+       
+       WORKING-STORAGE SECTION.
+       77  FIM PIC X VALUE SPACES.
+
+      ****************PROCEDURE DIVISION*****************  
+       PROCEDURE DIVISION.
+
+       CONTROLE.
+       PERFORM ABRIR.
+       PERFORM LEITURA.
+       PERFORM ROTINA UNTIL FIM EQUAL "*". 
+       PERFORM FECHAR. 
+       STOP RUN.
+
+
+       ABRIR.
+           OPEN INPUT PEDIDOS 
+                 OUTPUT NOTAS.
+
+       LEITURA.
+           READ PEDIDOS
+                 AT END MOVE "*" TO FIM. 
+
+       ROTINA.
+           PERFORM GRAVAR.
+           PERFORM LEITURA.
+
+       GRAVAR. 
+           COMPUTE PRECFINAL = (CUSTOPROD+IMPFED+IMPEST+IMPMUN)*1,1.
+           MOVE CODPROD TO PRODUTO.
+           WRITE REGNOTA.
+
+       FECHAR.
+           CLOSE PEDIDOS NOTAS. 
+           
