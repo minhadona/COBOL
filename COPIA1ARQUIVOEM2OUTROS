@@ -41,7 +41,7 @@
        01 REGAPROV. 
            05 NUMAP PIC 9(6).
            05 NOMAP PIC X(20). 
-           05 CONCAP PIC X(1).
+           05 CONCAP PIC X(2).
 
        FD REPROV
        LABEL RECORDS STANDARD
@@ -50,7 +50,7 @@
        01 REGREPROV. 
            05 NUMREP PIC 9(6).
            05 NOMREP PIC X(20). 
-           05 CONCREP PIC X(1).
+           05 CONCREP PIC X(2).
 
        WORKING-STORAGE SECTION.
        77  FIM PIC X VALUE SPACES.
