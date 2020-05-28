@@ -77,3 +77,14 @@
        FECHAR.
            CLOSE PEDIDOS NOTAS. 
            
+   
+          ------------------------
+EXEMPLO DE ARQUIVO PARA PEDIDOS.DAT:
+111111aaaaaa5555111222333
+(pode começar na primeira coluna)
+
+OUTPUT SERA:
+aaaaaa006843
+
+Pois:
+codigo do produto é aaaaaa e o valor total dele é 5555+111+222+333 multiplicado por 1,1 
