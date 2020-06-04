@@ -1,0 +1,113 @@
+      ****************IDENTIFICATION DIVISION***************** 
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. EX-00.
+       AUTHOR. GABRIELLA-DESTRO.
+       DATE-WRITTEN. 04/06/2020. 
+       DATE-COMPILED. 04/06/2020.
+      
+
+      ****************ENVIRONMENT DIVISION*****************  
+       ENVIRONMENT DIVISION.
+       SOURCE-COMPUTER. PC.
+       OBJECT-COMPUTER. PC. 
+       SPECIAL-NAMES. DECIMAL-POINT IS COMMA. 
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT ALUNOS ASSIGN DISK
+           ORGANIZATION IS LINE SEQUENTIAL.
+           SELECT RELALU ASSIGN DISK.
+
+      ****************DATA DIVISION*****************  
+       DATA DIVISION.
+       FILE SECTION.
+
+       FD  ALUNOS 
+       LABEL RECORDS STANDARD
+           VALUE OF FILE-ID IS "alunos.DAT".
+
+       01 REGALU.       
+           05  CODALU     PIC   999.
+           05  NOMALU     PIC  X(20).
+
+       FD  RELALU
+               LABEL    RECORDS   OMITTED.
+       01  REGPRINT     PIC   X(80).
+
+       WORKING-STORAGE SECTION.
+       77  FIM PIC X VALUE SPACES.
+
+       77  CT-LIN            PIC       9(02)   VALUE    21.    
+
+       01  CAB1.
+          05    FILLER     PIC  X(24)     VALUE    SPACES.
+          05    FILLER     PIC  X(36)     VALUE   
+           "FACULDADE DE TECNOLOGIA DE SAO PAULO".
+          05    FILLER     PIC  X(09)     VALUE    SPACES.
+          05    FILLER     PIC  X(04)     VALUE   "PAG:".
+          05    PAGINA    PIC  9(02)      VALUE   ZEROS.
+          05    FILLER     PIC  X(05)     VALUE   SPACES.   
+
+       01  CAB2.
+          05    FILLER     PIC  X(24)     VALUE    SPACES.
+          05    FILLER     PIC  X(19)     VALUE   "RELATORIO DE ALUNOS".
+          05    FILLER     PIC  X(37)     VALUE    SPACES.
+           
+       01  CAB3.
+          05    FILLER     PIC  X(09)     VALUE    SPACES.
+          05    FILLER     PIC  X(15)     VALUE    "CODIGO DO ALUNO".
+          05    FILLER     PIC  X(35)     VALUE    SPACES.
+          05    FILLER     PIC  X(13)     VALUE    "NOME DO ALUNO".
+          05    FILLER     PIC  X(08)     VALUE   SPACES.
+
+       01  DET1.
+          05    FILLER         PIC  X(09)     VALUE    SPACES.
+          05    CODALUR        PIC  9(03)      VALUE    ZEROS.
+          05    FILLER         PIC  X(47)     VALUE    SPACES.
+          05    NOMALUR        PIC  X(20)     VALUE    SPACES.
+          05    FILLER         PIC  X(01)     VALUE    SPACES.
+
+
+
+
+
+      ****************PROCEDURE DIVISION*****************  
+       PROCEDURE DIVISION.
+
+       CONTROLE.
+       PERFORM ABRIR.
+       PERFORM LEITURA.
+       PERFORM ROTINA UNTIL FIM EQUAL "*". 
+       PERFORM FECHAR. 
+       STOP RUN.
+
+       IMPRESSAO.
+           IF  (CT-LIN  GREATER 20)
+             ADD             1          TO     PAGINA
+             WRITE  REGPRINT  FROM  CAB1  AFTER  ADVANCING  PAGE
+             WRITE  REGPRINT  FROM  CAB2  AFTER  ADVANCING  1  LINE
+             WRITE  REGPRINT  FROM  CAB3  AFTER  ADVANCING  1  LINE
+             MOVE   1       TO    CT-LIN
+           ELSE
+             NEXT  SENTENCE.
+
+           MOVE    CODALU    TO     CODALUR.
+           MOVE    NOMALU    TO     NOMALUR.
+           WRITE   REGPRINT    FROM DET1  AFTER   ADVANCING   1   LINE.
+           ADD  1 TO     CT-LIN.
+
+  
+       ABRIR.
+           OPEN INPUT ALUNOS 
+                 OUTPUT RELALU.
+
+       LEITURA.
+           READ ALUNOS
+                 AT END MOVE "*" TO FIM. 
+
+       ROTINA.
+           PERFORM IMPRESSAO.
+           PERFORM LEITURA.
+
+       FECHAR.
+           CLOSE ALUNOS RELALU. 
+           
