@@ -1,0 +1,209 @@
+      ****************IDENTIFICATION DIVISION***************** 
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. pro.
+       AUTHOR. GABRIELLA-DESTRO.
+       DATE-WRITTEN. 06/06/2020. 
+       DATE-COMPILED. 06/06/2020.
+      *Este programa le CADALU e gera relatorio RELALU
+      *com as medias aritmeticas de cada aluno 
+
+      ****************ENVIRONMENT DIVISION******************* 
+       ENVIRONMENT DIVISION.
+       SOURCE-COMPUTER. PC.
+       OBJECT-COMPUTER. PC. 
+       SPECIAL-NAMES. DECIMAL-POINT IS COMMA. 
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT CADALU ASSIGN DISK
+           ORGANIZATION IS LINE SEQUENTIAL.
+           SELECT RELALU ASSIGN DISK.
+         
+
+      ****************DATA DIVISION*****************  
+       DATA DIVISION.
+       FILE SECTION.
+
+       FD CADALU 
+       LABEL RECORDS STANDARD
+           VALUE OF FILE-ID IS "lunos.DAT".
+
+       01 REGALU.       
+           05 MATRICULA PIC 9(6).
+           05 NOME PIC X(30). 
+           05 P1 PIC 9(2)V99.
+           05 P2 PIC 9(2)V99.
+           05 FALTAS PIC 9(2).
+
+       FD RELALU
+       LABEL RECORDS OMITTED.
+
+       01 REGPRINT PIC X(80). 
+    
+
+       WORKING-STORAGE SECTION.
+       77  FIM     PIC X       VALUE SPACES.
+       77  CT-LIN  PIC 9(02)   VALUE 21.  
+       77  CT-ALU  PIC 9(03)   VALUE ZEROS.
+       77  SOMAMEDIAS PIC 9(4)V9(2) VALUE ZEROS.
+       77  MEDINHA PIC 99V99 VALUE ZEROS.
+       77  MEDFIM PIC 9(2)V99 VALUE ZEROS.
+
+       01  CAB1.
+           05    FILLER     PIC  X(24)     VALUE    SPACES.
+           05    FILLER     PIC  X(36)     VALUE   
+           "FACULDADE DE TECNOLOGIA DE SAO PAULO".
+           05    FILLER     PIC  X(09)     VALUE    SPACES.
+           05    FILLER     PIC  X(04)     VALUE   "PAG:".
+           05    PAGINA    PIC  9(02)      VALUE   ZEROS.
+           05    FILLER     PIC  X(05)     VALUE   SPACES.   
+
+       01  CAB2.
+           05    FILLER   PIC X(16) VALUE SPACES.
+           05    FILLER   PIC X(9) VALUE "MATRICULA".
+           05    FILLER   PIC X(11) VALUE SPACES.     
+           05    FILLER   PIC X(4) VALUE "NOME".
+           05    FILLER   PIC X(21) VALUE SPACES.
+           05    FILLER   PIC X(5) VALUE "MEDIA".
+           05    FILLER   PIC X(14) VALUE SPACES.
+
+       01 DET1. 
+           05   FILLER   PIC X(16) VALUE SPACES.
+           05   DETMATRICULA   PIC 999.999 VALUE ZEROS. 
+           05   FILLER   PIC X(6) VALUE SPACES.
+           05   DETNOME   PIC X(30) VALUE SPACES.
+           05   FILLER PIC X(3) VALUE SPACES.
+           05   DETMEDIA   PIC Z9,99 VALUE ZEROS. 
+           05   FILLER   PIC X(14) VALUE SPACES.
+        
+       01 DET2.
+           05   FILLER   PIC X(10) VALUE SPACES. 
+           05   FILLER   PIC X(22) VALUE "MEDIA GERAL DA TURMA: ".
+           05   MEDFINAL PIC Z9,99 VALUE ZEROS.
+           05   FILLER   PIC X(43) VALUE SPACES.
+
+      ****************PROCEDURE DIVISION*****************  
+       PROCEDURE DIVISION.
+
+       CONTROLE.
+       PERFORM ABRIR.
+       PERFORM LEITURA.
+       PERFORM ROTINA UNTIL FIM EQUAL "*". 
+       PERFORM RODAPE.
+       PERFORM FECHAR. 
+       STOP RUN.
+
+
+       ABRIR.
+           OPEN INPUT CADALU  OUTPUT RELALU.
+
+       LEITURA.
+           READ CADALU
+                 AT END MOVE "*" TO FIM. 
+
+       ROTINA.
+           PERFORM IMPRESSAO.
+           PERFORM LEITURA.
+
+       IMPRESSAO. 
+           IF (CT-LIN GREATER 20) 
+              ADD 1 TO PAGINA
+              WRITE REGPRINT FROM CAB1 AFTER ADVANCING PAGE 
+              WRITE REGPRINT FROM CAB2 AFTER ADVANCING 2 LINE
+              MOVE 1 TO CT-LIN
+
+           ELSE NEXT SENTENCE.
+                  
+            ADD 1 TO CT-ALU.
+            COMPUTE MEDINHA = (P1+P2)/2.
+            ADD MEDINHA TO SOMAMEDIAS.
+            MOVE MEDINHA TO DETMEDIA.
+            MOVE MATRICULA TO DETMATRICULA.
+            MOVE NOME TO DETNOME.
+
+            IF (CT-LIN EQUAL TO 1) 
+              WRITE REGPRINT FROM DET1 AFTER ADVANCING 2 LINES
+            ELSE 
+              WRITE REGPRINT FROM DET1 AFTER ADVANCING 1 LINE.
+
+            ADD 1 TO CT-LIN. 
+
+
+       RODAPE.
+           COMPUTE MEDFIM = SOMAMEDIAS/CT-ALU.
+           MOVE MEDFIM TO MEDFINAL.
+           WRITE REGPRINT FROM DET2 AFTER ADVANCING 2 LINES.
+
+       FECHAR.
+           CLOSE CADALU RELALU. 
+           
+-----------------------------------------------------------------------------------------------------
+   input: (lunos.dat)
+   
+111111GABRIELLA DESTRO              1000090010
+222222Luis Garavito                 0825100002
+333333Javed Iqbal                   0050032515
+444444Mikhail Popkov                1000100002
+555555Kampatimar Shankariya         1000005010
+666666Yang Xinhai                   0750085007
+777777Andrei Chikatilo              0800100000
+888888Anatoly Onoprienko            0300070005
+999999Gary Ridgway                  0450065010
+000010Ahmad Suradji                 0300070005
+000011Serhiy Tkach                  0300070005
+000012Gennady Mikhasevich           0300070005
+000013Hadj Mohammed Mesfewi         0300070005
+000014Fernando Hernandez Leyva      0800100002
+000015Ramadan Abdel Rehim Mansour   0750085007
+000016Karl Denke                    0750085007
+000017Cedric Maake                  0750085007
+000018Vasili Komaroff               0050032515
+000019Vera Renczi                   0050032515
+000020Ali Asghar Borujerdi          0050032515
+000021Majid Salek Mohammadi         0050032515
+000022Juan Fernando Hermosa         0050032515
+000023Mikhail Novosyolov            0050032515
+000024Jose Paz Bezerra              1000080002
+000025Sipho Agmatir Thwala          0050032515
+000026Elias Xitavhudzi              0050032515
+-----------------------------------------------------------------------------------------------------
+   output: relalu
+   
+                          FACULDADE DE TECNOLOGIA DE SAO PAULO         PAG:01     
+
+                MATRICULA           NOME                     MEDIA              
+
+                111.111      GABRIELLA DESTRO                  9,50             
+                222.222      Luis Garavito                     9,12             
+                333.333      Javed Iqbal                       1,87             
+                444.444      Mikhail Popkov                   10,00             
+                555.555      Kampatimar Shankariya             5,25             
+                666.666      Yang Xinhai                       8,00             
+                777.777      Andrei Chikatilo                  9,00             
+                888.888      Anatoly Onoprienko                5,00             
+                999.999      Gary Ridgway                      5,50             
+                000.010      Ahmad Suradji                     5,00             
+                000.011      Serhiy Tkach                      5,00             
+                000.012      Gennady Mikhasevich               5,00             
+                000.013      Hadj Mohammed Mesfewi             5,00             
+                000.014      Fernando Hernandez Leyva          9,00             
+                000.015      Ramadan Abdel Rehim Mansour       8,00             
+                000.016      Karl Denke                        8,00             
+                000.017      Cedric Maake                      8,00             
+                000.018      Vasili Komaroff                   1,87             
+                000.019      Vera Renczi                       1,87             
+                000.020      Ali Asghar Borujerdi              1,87             
+                        FACULDADE DE TECNOLOGIA DE SAO PAULO         PAG:02     
+
+                MATRICULA           NOME                     MEDIA              
+
+                000.021      Majid Salek Mohammadi             1,87             
+                000.022      Juan Fernando Hermosa             1,87             
+                000.023      Mikhail Novosyolov                1,87             
+                000.024      Jose Paz Bezerra                  9,00             
+                000.025      Sipho Agmatir Thwala              1,87             
+                000.026      Elias Xitavhudzi                  1,87             
+
+          MEDIA GERAL DA TURMA:  5,39                                           
+
+   
+
