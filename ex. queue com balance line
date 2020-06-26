@@ -1,0 +1,378 @@
++----------+                          +----------+ 
+| CADALU-A |                          | CADALU-B |
++----------+                          +----------+ 
+     |                                     |
+ |PGMSRTA| <--> ARQSRT-A               |PGMSRTB| <--> ARQSRT-B
+     |                                     |
++----------+                           +----------+
+|  ALU-A   |                           |   ALU-B  |
++----------+                           +----------+
+     |_____________________________________|
+                       |
+                   |PGMBLINE|
+                       |
+                  +----------+
+                  |  ALUNO   |
+                  +----------+ 
+                  
+*********************************************************************************************************************************************************************
+                       
+PGMSRTA: A PARTIR DO ARQUIVO SEQUENCIAL CADALU-A GERAR O ARQUIVO ALU-A ORDENADO DE FORMA ASCENDENTE PELO CAMPO CÓDIGO.
+LAYOUT: 
+a) CADALU-A 
+  COD-ALU | NOME-ALU | TEL-ALU
+   X(03)  |   X(20)  |   X(10)
+   
+b) ALU-A 
+  COD-A | NOME-A | TEL-A 
+  X(03) |  X(20) | X(10)
+  
+  
+PGMSRTB: 	A PARTIR DO ARQUIVO SEQUENCIAL CADALU-B GERAR O ARQUIVO ALU-B ORDENADO DE FORMA ASCENDENTE PELO CAMPO CÓDIGO.
+LAYOUT: 
+a) CADALU-B 
+  COD-ALU | NOME-ALU | TEL-ALU
+   X(03)  |   X(20)  |   X(10)
+   
+b) ALU-B 
+  COD-B | NOME-B | TEL-B 
+  X(03) |  X(20) | X(10)
+  
+  
+  
+PMGBLINE: REALIZAR O MERGE (INTERCALAÇÃO) DOS ARQUIVOS DE ENTRADA ALU-A E ALU-B GERANDO O ARQUIVO DE SAÍDA ALUNO.
+LAYOUT:
+a) ALU-A 
+  COD-A | NOME-A | TEL-A 
+  X(03) |  X(20) | X(10)
+
+b) ALU-B 
+  COD-B | NOME-B | TEL-B 
+  X(03) |  X(20) | X(10)
+  
+c) ALUNO
+  COD-ALU | NOME-ALU | TEL-ALU
+   X(03)  |   X(20)  |   X(10)
+
+*********************************************************************************************************************************************************************
+
+█████████████████████████████████████████████████████████████████
+█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░░░███░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█
+█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀▄▀░░███░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█
+█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░▄▀░░███░░░░░░▄▀░░░░░░█░░▄▀░░░░░░▄▀░░█
+█░░▄▀░░█████████░░▄▀░░████░░▄▀░░███████░░▄▀░░█████░░▄▀░░██░░▄▀░░█
+█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░▄▀░░███████░░▄▀░░█████░░▄▀░░░░░░▄▀░░█
+█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀▄▀░░███████░░▄▀░░█████░░▄▀▄▀▄▀▄▀▄▀░░█
+█░░░░░░░░░░▄▀░░█░░▄▀░░░░░░▄▀░░░░███████░░▄▀░░█████░░▄▀░░░░░░▄▀░░█
+█████████░░▄▀░░█░░▄▀░░██░░▄▀░░█████████░░▄▀░░█████░░▄▀░░██░░▄▀░░█
+█░░░░░░░░░░▄▀░░█░░▄▀░░██░░▄▀░░░░░░█████░░▄▀░░█████░░▄▀░░██░░▄▀░░█
+█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░██░░▄▀▄▀▄▀░░█████░░▄▀░░█████░░▄▀░░██░░▄▀░░█
+█░░░░░░░░░░░░░░█░░░░░░██░░░░░░░░░░█████░░░░░░█████░░░░░░██░░░░░░█
+█████████████████████████████████████████████████████████████████
+
+      *█████████████████████████████████████████
+      *█▄─▄█▄─▄▄▀█▄─▄▄─█▄─▀█▄─▄█─▄─▄─█▄─▄█▄─▄▄─█
+      *██─███─██─██─▄█▀██─█▄▀─████─████─███─▄███
+      *▀▄▄▄▀▄▄▄▄▀▀▄▄▄▄▄▀▄▄▄▀▀▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▀▀▀
+
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID.  PGMSRTA.
+       AUTHOR. GABRIELLA-DESTRO.
+       DATE-WRITTEN. 25/06/2020. 
+       DATE-COMPILED. 25/06/2020.
+      *Este programa le CADALU-A.dat, ordena crescente pelo codigo do
+      * aluno e gera o ALU-A.dat organizado 
+
+      *████████████████████████████████████
+      *█▄─▄▄─█▄─▀█▄─▄█▄─█─▄█▄─▄█▄─▄▄▀█─▄▄─█
+      *██─▄█▀██─█▄▀─███▄▀▄███─███─▄─▄█─██─█
+      *▀▄▄▄▄▄▀▄▄▄▀▀▄▄▀▀▀▄▀▀▀▄▄▄▀▄▄▀▄▄▀▄▄▄▄▀
+      
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SOURCE-COMPUTER.    PC.
+       OBJECT-COMPUTER.    PC.
+       SPECIAL-NAMES.
+               DECIMAL-POINT  IS  COMMA.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+            SELECT   CADALU-A    ASSIGN   DISK
+                 ORGANIZATION IS LINE SEQUENTIAL.
+            SELECT   ALU-A      ASSIGN   DISK
+                 ORGANIZATION IS LINE SEQUENTIAL.
+            SELECT   ARQSRT-A      ASSIGN   DISK.
+
+
+      *█████████████████████████
+      *█▄─▄▄▀██▀▄─██─▄─▄─██▀▄─██
+      *██─██─██─▀─████─████─▀─██
+      *▀▄▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀
+
+       DATA DIVISION.
+       FILE SECTION.
+
+      *,---.,---.,---.|,---.--.--,---.,---.,---.
+      *|---'|--- |  _.|`---.  |  |---'|   |`---.
+      *|  \ |    |   ||    |  |  |  \ |   |    |
+      *`   ``---'`---'``---'  `  `   ``---'`---'
+
+       FD  CADALU-A
+             LABEL RECORDS STANDARD
+             VALUE  OF  FILE-ID   IS  "CADALU-A.DAT".
+       01  REGCADALU-A.
+             05  COD-ALU           PIC X(03).
+             05  NOME-ALU          PIC X(20).
+             05  TEL-ALU           PIC X(10). 
+      *-------------------------------------
+
+       FD  ALU-A
+             LABEL RECORDS STANDARD
+             VALUE  OF  FILE-ID   IS  "ALU-A.DAT".
+       01  REGALU-A.
+             05  COD-A           PIC X(03).
+             05  NOME-A          PIC X(20).
+             05  TEL-A           PIC X(10). 
+      *-------------------------------------
+
+       SD  ARQSRT-A.
+       01  REGARQSRT-A.
+             05  COD-SORT         PIC X(03).
+             05  NOME-SORT        PIC X(20).
+             05  TEL-SORT         PIC X(10).  
+
+      *████████████████████████████████████
+      *█▄─▄▄─█▄─▄▄▀█─▄▄─█─▄▄▄─█▄─▄▄─█▄─▄▄▀█
+      *██─▄▄▄██─▄─▄█─██─█─███▀██─▄█▀██─██─█
+      *▀▄▄▄▀▀▀▄▄▀▄▄▀▄▄▄▄▀▄▄▄▄▄▀▄▄▄▄▄▀▄▄▄▄▀▀
+
+       PROCEDURE DIVISION.
+
+       ROTINA-PRINCIPAL.
+           SORT   ARQSRT-A   ASCENDING   KEY   COD-SORT
+                          USING    CADALU-A  
+                          GIVING   ALU-A.
+           STOP   RUN.
+
+*********************************************************************************************************************************************************************
+
+███████████████████████████████████████████████████████████████████
+█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░░░███░░░░░░░░░░░░░░█░░░░░░░░░░░░░░███
+█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀▄▀░░███░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░███
+█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░▄▀░░███░░░░░░▄▀░░░░░░█░░▄▀░░░░░░▄▀░░███
+█░░▄▀░░█████████░░▄▀░░████░░▄▀░░███████░░▄▀░░█████░░▄▀░░██░░▄▀░░███
+█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░▄▀░░███████░░▄▀░░█████░░▄▀░░░░░░▄▀░░░░█
+█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀▄▀░░███████░░▄▀░░█████░░▄▀▄▀▄▀▄▀▄▀▄▀░░█
+█░░░░░░░░░░▄▀░░█░░▄▀░░░░░░▄▀░░░░███████░░▄▀░░█████░░▄▀░░░░░░░░▄▀░░█
+█████████░░▄▀░░█░░▄▀░░██░░▄▀░░█████████░░▄▀░░█████░░▄▀░░████░░▄▀░░█
+█░░░░░░░░░░▄▀░░█░░▄▀░░██░░▄▀░░░░░░█████░░▄▀░░█████░░▄▀░░░░░░░░▄▀░░█
+█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░██░░▄▀▄▀▄▀░░█████░░▄▀░░█████░░▄▀▄▀▄▀▄▀▄▀▄▀░░█
+█░░░░░░░░░░░░░░█░░░░░░██░░░░░░░░░░█████░░░░░░█████░░░░░░░░░░░░░░░░█
+███████████████████████████████████████████████████████████████████
+
+
+      *█████████████████████████████████████████
+      *█▄─▄█▄─▄▄▀█▄─▄▄─█▄─▀█▄─▄█─▄─▄─█▄─▄█▄─▄▄─█
+      *██─███─██─██─▄█▀██─█▄▀─████─████─███─▄███
+      *▀▄▄▄▀▄▄▄▄▀▀▄▄▄▄▄▀▄▄▄▀▀▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▀▀▀
+
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID.  PGMSRTB.
+       AUTHOR. GABRIELLA-DESTRO.
+       DATE-WRITTEN. 25/06/2020. 
+       DATE-COMPILED. 25/06/2020.
+      *Este programa le CADALU-B.dat, ordena crescente pelo codigo do
+      * aluno e gera o ALU-B.dat organizado 
+
+      *████████████████████████████████████
+      *█▄─▄▄─█▄─▀█▄─▄█▄─█─▄█▄─▄█▄─▄▄▀█─▄▄─█
+      *██─▄█▀██─█▄▀─███▄▀▄███─███─▄─▄█─██─█
+      *▀▄▄▄▄▄▀▄▄▄▀▀▄▄▀▀▀▄▀▀▀▄▄▄▀▄▄▀▄▄▀▄▄▄▄▀
+
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SOURCE-COMPUTER.    PC.
+       OBJECT-COMPUTER.    PC.
+       SPECIAL-NAMES.
+               DECIMAL-POINT  IS  COMMA.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+            SELECT   CADALU-B    ASSIGN   DISK
+                 ORGANIZATION IS LINE SEQUENTIAL.
+            SELECT   ALU-B      ASSIGN   DISK
+                 ORGANIZATION IS LINE SEQUENTIAL.
+            SELECT   ARQSRT-B      ASSIGN   DISK.
+
+
+      *█████████████████████████
+      *█▄─▄▄▀██▀▄─██─▄─▄─██▀▄─██
+      *██─██─██─▀─████─████─▀─██
+      *▀▄▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀
+
+       DATA DIVISION.
+       FILE SECTION.
+
+      *,---.,---.,---.|,---.--.--,---.,---.,---.
+      *|---'|--- |  _.|`---.  |  |---'|   |`---.
+      *|  \ |    |   ||    |  |  |  \ |   |    |
+      *`   ``---'`---'``---'  `  `   ``---'`---'
+
+       FD  CADALU-B
+             LABEL RECORDS STANDARD
+             VALUE  OF  FILE-ID   IS  "CADALU-B.DAT".
+       01  REGCADALU-B.
+             05  COD-ALU           PIC X(03).
+             05  NOME-ALU          PIC X(20).
+             05  TEL-ALU           PIC X(10). 
+      *-------------------------------------
+
+       FD  ALU-B
+             LABEL RECORDS STANDARD
+             VALUE  OF  FILE-ID   IS  "ALU-B.DAT".
+       01  REGALU-B.
+             05  COD-B           PIC X(03).
+             05  NOME-B          PIC X(20).
+             05  TEL-B           PIC X(10). 
+      *-------------------------------------
+
+       SD  ARQSRT-B.
+       01  REGARQSRT-B.
+             05  COD-SORT         PIC X(03).
+             05  NOME-SORT        PIC X(20).
+             05  TEL-SORT         PIC X(10).  
+
+      *████████████████████████████████████
+      *█▄─▄▄─█▄─▄▄▀█─▄▄─█─▄▄▄─█▄─▄▄─█▄─▄▄▀█
+      *██─▄▄▄██─▄─▄█─██─█─███▀██─▄█▀██─██─█
+      *▀▄▄▄▀▀▀▄▄▀▄▄▀▄▄▄▄▀▄▄▄▄▄▀▄▄▄▄▄▀▄▄▄▄▀▀
+      
+       PROCEDURE DIVISION.
+
+       ROTINA-PRINCIPAL.
+           SORT   ARQSRT-B   ASCENDING   KEY   COD-SORT
+                          USING    CADALU-B  
+                          GIVING   ALU-B.
+           STOP   RUN.
+
+
+*********************************************************************************************************************************************************************
+
+██████████████████████████████████████████████████████████████████████████████████
+█░░░░░░░░░░░░░░███░░░░░░█████████░░░░░░░░░░█░░░░░░██████████░░░░░░█░░░░░░░░░░░░░░█
+█░░▄▀▄▀▄▀▄▀▄▀░░███░░▄▀░░█████████░░▄▀▄▀▄▀░░█░░▄▀░░░░░░░░░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█
+█░░▄▀░░░░░░▄▀░░███░░▄▀░░█████████░░░░▄▀░░░░█░░▄▀▄▀▄▀▄▀▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░█
+█░░▄▀░░██░░▄▀░░███░░▄▀░░███████████░░▄▀░░███░░▄▀░░░░░░▄▀░░██░░▄▀░░█░░▄▀░░█████████
+█░░▄▀░░░░░░▄▀░░░░█░░▄▀░░███████████░░▄▀░░███░░▄▀░░██░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░█
+█░░▄▀▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░███████████░░▄▀░░███░░▄▀░░██░░▄▀░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█
+█░░▄▀░░░░░░░░▄▀░░█░░▄▀░░███████████░░▄▀░░███░░▄▀░░██░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░█
+█░░▄▀░░████░░▄▀░░█░░▄▀░░███████████░░▄▀░░███░░▄▀░░██░░▄▀░░░░░░▄▀░░█░░▄▀░░█████████
+█░░▄▀░░░░░░░░▄▀░░█░░▄▀░░░░░░░░░░█░░░░▄▀░░░░█░░▄▀░░██░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░░░░░░░░░█
+█░░▄▀▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀░░█░░▄▀░░██░░░░░░░░░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█
+█░░░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░█░░░░░░██████████░░░░░░█░░░░░░░░░░░░░░█
+██████████████████████████████████████████████████████████████████████████████████
+
+
+      *█████████████████████████████████████████
+      *█▄─▄█▄─▄▄▀█▄─▄▄─█▄─▀█▄─▄█─▄─▄─█▄─▄█▄─▄▄─█
+      *██─███─██─██─▄█▀██─█▄▀─████─████─███─▄███
+      *▀▄▄▄▀▄▄▄▄▀▀▄▄▄▄▄▀▄▄▄▀▀▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▀▀▀
+      
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID.   PGMBLINE.
+       AUTHOR. GABRIELLA-DESTRO.
+       DATE-WRITTEN. 25/06/2020. 
+       DATE-COMPILED. 25/06/2020.
+      *Este programa le ALU-A.dat, e ALU-B.dat que ja estao ordenados
+      * e mescla, resultando no arquivo ALUNO.dat 
+
+      *████████████████████████████████████
+      *█▄─▄▄─█▄─▀█▄─▄█▄─█─▄█▄─▄█▄─▄▄▀█─▄▄─█
+      *██─▄█▀██─█▄▀─███▄▀▄███─███─▄─▄█─██─█
+      *▀▄▄▄▄▄▀▄▄▄▀▀▄▄▀▀▀▄▀▀▀▄▄▄▀▄▄▀▄▄▀▄▄▄▄▀
+
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SOURCE-COMPUTER.    PC.
+       OBJECT-COMPUTER.    PC.
+       SPECIAL-NAMES.
+               DECIMAL-POINT  IS  COMMA.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+            SELECT   ALU-A    ASSIGN   DISK
+                 ORGANIZATION IS LINE SEQUENTIAL.
+            SELECT   ALU-B      ASSIGN   DISK
+                 ORGANIZATION IS LINE SEQUENTIAL.
+            SELECT   ALUNO      ASSIGN   DISK
+                 ORGANIZATION IS LINE SEQUENTIAL.
+
+
+      *█████████████████████████
+      *█▄─▄▄▀██▀▄─██─▄─▄─██▀▄─██
+      *██─██─██─▀─████─████─▀─██
+      *▀▄▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀
+
+       DATA DIVISION.
+       FILE SECTION.
+
+      *,---.,---.,---.|,---.--.--,---.,---.,---.
+      *|---'|--- |  _.|`---.  |  |---'|   |`---.
+      *|  \ |    |   ||    |  |  |  \ |   |    |
+      *`   ``---'`---'``---'  `  `   ``---'`---'
+
+       FD  ALU-A
+             LABEL RECORDS STANDARD
+             VALUE  OF  FILE-ID   IS  "ALU-A.DAT".
+       01  REGALU-A.
+             05  COD-A           PIC X(03).
+             05  NOME-A          PIC X(20).
+             05  TEL-A           PIC X(10). 
+      *-------------------------------------
+
+       FD  ALU-B
+             LABEL RECORDS STANDARD
+             VALUE  OF  FILE-ID   IS  "ALU-B.DAT".
+       01  REGALU-B.
+             05  COD-B           PIC X(03).
+             05  NOME-B          PIC X(20).
+             05  TEL-B           PIC X(10). 
+      *-------------------------------------
+
+       FD  ALUNO
+              LABEL RECORDS STANDARD
+              VALUE  OF  FILE-ID   IS  "ALUNO.DAT".
+       01  REGALUNO.
+             05  COD-ALU           PIC X(03).
+             05  NOME-ALU          PIC X(20).
+             05  TEL-ALU           PIC X(10). 
+
+      *████████████████████████████████████
+      *█▄─▄▄─█▄─▄▄▀█─▄▄─█─▄▄▄─█▄─▄▄─█▄─▄▄▀█
+      *██─▄▄▄██─▄─▄█─██─█─███▀██─▄█▀██─██─█
+      *▀▄▄▄▀▀▀▄▄▀▄▄▀▄▄▄▄▀▄▄▄▄▄▀▄▄▄▄▄▀▄▄▄▄▀▀
+
+       PROCEDURE DIVISION.
+
+       ROTINA-PRINCIPAL.
+           OPEN  INPUT ALU-A   ALU-B    OUTPUT ALUNO.
+           PERFORM LER-ALU-A.
+           PERFORM LER-ALU-B.
+           PERFORM ROTINA  UNTIL  (COD-A  EQUAL HIGH-VALUES) AND
+                                    (COD-B  EQUAL HIGH-VALUES).
+           CLOSE  ALU-A   ALU-B   ALUNO.
+           STOP RUN.
+
+       LER-ALU-A.
+           READ  ALU-A  AT  END    MOVE  HIGH-VALUES TO COD-A.
+
+       LER-ALU-B.
+           READ  ALU-B  AT  END    MOVE  HIGH-VALUES TO COD-B.
+
+       ROTINA.
+           IF  COD-A  GREATER  COD-B
+                MOVE   REGALU-B    TO  REGALUNO
+                WRITE   REGALUNO
+                PERFORM   LER-ALU-B
+           ELSE
+                MOVE   REGALU-A    TO  REGALUNO
+                WRITE   REGALUNO
+                PERFORM LER-ALU-A.
+
