@@ -1,0 +1,211 @@
++---------+
+| PEDIDOA |  (arquivo seq)
++---------+ 
+    |
+ | P1 |  <--> ARQSORT (arquivo ordenacao)
+    |
++---------+
+| PEDIDO1 |   (arquivo seq)
++---------+   
+    
+*********************************************************************************************************************************************************************
+LAYOUT:
+a) PEDIDOA
+| NUMPED |  VALPED  | DESCPED | DATAEXP |  
+|  9(03) | 9(06)V99 |   X(10) |   9(08) |
+
+b) PEDIDO1
+| NUMPED1 | VALPED1  | DESCPED |
+|  9(03)  | 9(06)V99 |  X(10)  |
+
+
+PG1:
+A PARTIR DO ARQUIVO PEDIDOA (pedidoa.dat) SELECIONAR OS REGISTROS QUE APRESENTEM NUMPED PAR E GRAVE
+NO ARQUIVO SORT CLASSIFICANDO EM ORDEM DESCENDENTE DE NÚMERO DO PEDIDO.
+---input procedure---
+
+APÓS A CLASSIFICAÇÃO DOS REGISTROS SELECIONADOS, ANTES DA GERAÇÃO DO ARQUIVO PEDIDO1 (pedido1.dat), 
+SELECIONAR APENAS O REGISTROS COM ANO MAIOR QUE 2015 E MULTIPLICAR O VALOR DO PEDIDO POR 1,2.
+---output procedure---
+*********************************************************************************************************************************************************************
+
+
+      *█████████████████████████████████████████
+      *█▄─▄█▄─▄▄▀█▄─▄▄─█▄─▀█▄─▄█─▄─▄─█▄─▄█▄─▄▄─█
+      *██─███─██─██─▄█▀██─█▄▀─████─████─███─▄███
+      *▀▄▄▄▀▄▄▄▄▀▀▄▄▄▄▄▀▄▄▄▀▀▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▀▀▀
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID.  PGMP1.
+       AUTHOR.      FATEC.
+
+      *████████████████████████████████████
+      *█▄─▄▄─█▄─▀█▄─▄█▄─█─▄█▄─▄█▄─▄▄▀█─▄▄─█
+      *██─▄█▀██─█▄▀─███▄▀▄███─███─▄─▄█─██─█
+      *▀▄▄▄▄▄▀▄▄▄▀▀▄▄▀▀▀▄▀▀▀▄▄▄▀▄▄▀▄▄▀▄▄▄▄▀
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SOURCE-COMPUTER.    PC.
+       OBJECT-COMPUTER.    PC.
+       SPECIAL-NAMES.
+               DECIMAL-POINT  IS  COMMA.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+            SELECT   PEDIDOA    ASSIGN   DISK
+                 ORGANIZATION IS LINE SEQUENTIAL.
+            SELECT   PEDIDO1      ASSIGN   DISK
+                 ORGANIZATION IS LINE SEQUENTIAL.
+            SELECT   ARQSORT      ASSIGN   DISK.
+
+
+      *█████████████████████████
+      *█▄─▄▄▀██▀▄─██─▄─▄─██▀▄─██
+      *██─██─██─▀─████─████─▀─██
+      *▀▄▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀
+       DATA DIVISION.
+       FILE SECTION.
+
+      *,---.,---.,---.|,---.--.--,---.,---.,---.
+      *|---'|--- |  _.|`---.  |  |---'|   |`---.
+      *|  \ |    |   ||    |  |  |  \ |   |    |
+      *`   ``---'`---'``---'  `  `   ``---'`---'
+
+       FD  PEDIDOA
+             LABEL RECORDS STANDARD
+             VALUE  OF  FILE-ID   IS  "PEDIDOA.DAT".
+       01  REGPEDIDOA.
+             05  NUMPED            PIC 9(03).
+             05  VALPED            PIC 9(06)V99.
+             05  DESCPED           PIC X(10).
+             05  DATAEXP.
+                06 DD              PIC 99.
+                06 MM              PIC 99.
+                06 AA              PIC 9999.
+      *-------------------------------------
+
+       FD  PEDIDO1
+             LABEL RECORDS STANDARD
+             VALUE  OF  FILE-ID   IS  "PEDIDO1.DAT".
+       01  REGPEDIDO1.
+             05  NUMPED1           PIC 9(03).
+             05  VALPED1           PIC 9(06)V99.
+             05  DESCPED           PIC X(10).
+      *-------------------------------------
+
+       SD  ARQSORT.
+       01  REGSORT.
+             05  NUMSORT            PIC 9(03).
+             05  VALSORT            PIC 9(06)V99.
+             05  DESCSORT           PIC X(10).
+             05  DATASORT.
+                06 DDS              PIC 99.
+                06 MMS              PIC 99.
+                06 AAS              PIC 9999.
+
+      *. . .,---.,---.|   /|,   .    ,---.--.--,---.,---.,---.,---.,---.
+      *| | ||   ||---'|__/ ||\  |    `---.  |  |   ||---'|---||  _.|--- 
+      *| | ||   ||  \ |  \ || \ |        |  |  |   ||  \ |   ||   ||    
+      *`-'-'`---'`   ``   ```  `'    `---'  `  `---'`   ``   '`---'`---'
+
+       WORKING-STORAGE   SECTION.
+       77    FIM                    PIC X VALUE SPACES.
+       77    RESTO                  PIC 99 VALUE ZEROS.
+       77    QUOCIENTE              PIC 9999 VALUE ZEROS.
+       77    VALORDOBRADO           PIC 9(07)V99.
+
+      * A BY B GIVING C REMAINDER D  a/b=c   resto d
+
+      *████████████████████████████████████
+      *█▄─▄▄─█▄─▄▄▀█─▄▄─█─▄▄▄─█▄─▄▄─█▄─▄▄▀█
+      *██─▄▄▄██─▄─▄█─██─█─███▀██─▄█▀██─██─█
+      *▀▄▄▄▀▀▀▄▄▀▄▄▀▄▄▄▄▀▄▄▄▄▄▀▄▄▄▄▄▀▄▄▄▄▀▀
+
+       PROCEDURE DIVISION.
+
+
+       ROTINA-PRINCIPAL.
+           SORT   ARQSORT   DESCENDING   KEY   NUMSORT
+                          INPUT  PROCEDURE    ROTINA
+                          OUTPUT PROCEDURE    SELEC.
+           STOP   RUN.
+
+
+       ROTINA.
+           OPEN     INPUT      PEDIDOA.
+           PERFORM LEITURA.
+           PERFORM    SELECIONA    UNTIL    FIM   EQUAL   "*".
+           CLOSE    PEDIDOA.
+
+       LEITURA.
+           READ  PEDIDOA    AT   END    MOVE    "*"    TO     FIM.
+
+       SELECIONA.
+            DIVIDE NUMPED BY 2 GIVING QUOCIENTE REMAINDER RESTO.
+            IF  (RESTO EQUAL 0)
+                RELEASE REGSORT     FROM    REGPEDIDOA
+            ELSE
+               NEXT    SENTENCE.
+           PERFORM   LEITURA.
+
+       SELEC.
+           OPEN     OUTPUT      PEDIDO1.
+           MOVE     SPACES     TO     FIM.
+           PERFORM LEITURA1.
+           PERFORM    SELEC1    UNTIL    FIM   EQUAL   "*".
+           CLOSE    PEDIDO1.
+
+       LEITURA1.
+             RETURN  ARQSORT  AT  END    MOVE  "*"  TO   FIM.
+
+
+       SELEC1.
+           IF  (AAS  GREATER THAN  2015)
+               COMPUTE VALORDOBRADO = VALSORT * 1,2
+               MOVE VALORDOBRADO TO VALSORT
+               WRITE    REGPEDIDO1     FROM    REGSORT
+           ELSE
+               NEXT    SENTENCE.
+           PERFORM   LEITURA1.
+
+*********************************************************************************************************************************************************************
+PEDIDOA.DAT
+
+00100020090SABAO-CRAC01022015
+01000030090SABAO-CREC01032018
+00700033080SABAO-CRIC01022020
+07100120090SABAO-CROC01022019
+00200220060SABAO-CRUC01022019
+00200020090SABAO-KRAC01022015
+01900030090SABAO-KREC01032018
+07700033080SABAO-KRIC01022020
+27100120090SABAO-KROC01022019
+30200220060SABAO-KRUC01022019
+09100020090SABAO-QRAC01022015
+00000030090SABAO-QREC01032018
+03700033080SABAO-QRIC01022020
+07800120090SABAO-QROC01022019
+05200220060SABAO-QRUC01022019
+10200020090SABAO-TRAC01022015
+11900030090SABAO-TREC01032018
+47700033080SABAO-TRIC01022020
+27200120090SABAO-TROC01022019
+90200220060SABAO-TRUC01022019
+*********************************************************************************************************************************************************************
+ARQSORT
+
+tera os registros acima que tiverem o numero do pedido par (composto pelos primeiros 3 dígitos de cada registro)
+e estará em ordem descendente
+*********************************************************************************************************************************************************************
+PEDIDO1.DAT
+
+pegou os registros do arqsort e eliminou os que possuíam data menor ou igual a 2015. 
+ficaram aqui os registros com data maior que 2015, organizados em ordem descendente pelo numero do pedido, 
+mas sem a informação da data, como manda o layout do pedido1.dat :
+
+90200264072SABAO-TRUC
+30200264072SABAO-KRUC
+27200144108SABAO-TROC
+07800144108SABAO-QROC
+05200264072SABAO-QRUC
+01000036108SABAO-CREC
+00200264072SABAO-CRUC
+00000036108SABAO-QREC
