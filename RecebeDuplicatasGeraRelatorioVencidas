@@ -1,0 +1,214 @@
++------------+
+| duplicatas |
++------------+
+      | 
+  |PROVA P2| <-->  ARQSORT
+      |
++------------+
+| RELVENCIDA |
++------------+
+
+
+LER O ARQUIVO DUPLICATAS E SELECIONAR OS REGISTROS COM ANO DE VENCIMENTO MENOR QUE 2020 (DUPLICATAS VENCIDAS). 
+OS REGISTROS SELECIONADOS DEVEM SER CLASSIFICADOS EM ORDEM ASCENDENTE DE NÚMERO DE DUPLICATA.
+APÓS A CLASSIFICAÇÃO, EMITIR O RELATÓRIO RELVENCIDA COM 5 LINHAS DETALHES POR PÁGINA. 
+
+*********************************************************************************************************************************************************************
+
+      *█████████████████████████████████████████
+      *█▄─▄█▄─▄▄▀█▄─▄▄─█▄─▀█▄─▄█─▄─▄─█▄─▄█▄─▄▄─█
+      *██─███─██─██─▄█▀██─█▄▀─████─████─███─▄███
+      *▀▄▄▄▀▄▄▄▄▀▀▄▄▄▄▄▀▄▄▄▀▀▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▀▀▀
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID.  PROVAP2.
+       AUTHOR.      GABRIELLA DESTRO.
+
+
+      *████████████████████████████████████
+      *█▄─▄▄─█▄─▀█▄─▄█▄─█─▄█▄─▄█▄─▄▄▀█─▄▄─█
+      *██─▄█▀██─█▄▀─███▄▀▄███─███─▄─▄█─██─█
+      *▀▄▄▄▄▄▀▄▄▄▀▀▄▄▀▀▀▄▀▀▀▄▄▄▀▄▄▀▄▄▀▄▄▄▄▀
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SOURCE-COMPUTER.    PC.
+       OBJECT-COMPUTER.    PC.
+       SPECIAL-NAMES.
+               DECIMAL-POINT  IS  COMMA.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+            SELECT   DUPLICATAS    ASSIGN   DISK
+                 ORGANIZATION IS LINE SEQUENTIAL.
+            SELECT   RELVENCIDA      ASSIGN   DISK.
+            SELECT   ARQSORT      ASSIGN   DISK.
+
+
+      *█████████████████████████
+      *█▄─▄▄▀██▀▄─██─▄─▄─██▀▄─██
+      *██─██─██─▀─████─████─▀─██
+      *▀▄▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀
+       DATA DIVISION.
+       FILE SECTION.
+
+      *,---.,---.,---.|,---.--.--,---.,---.,---.
+      *|---'|--- |  _.|`---.  |  |---'|   |`---.
+      *|  \ |    |   ||    |  |  |  \ |   |    |
+      *`   ``---'`---'``---'  `  `   ``---'`---'
+
+       FD  DUPLICATAS
+             LABEL RECORDS STANDARD
+             VALUE  OF  FILE-ID   IS  "dupli.DAT".
+
+       01  REGDUPLICATAS.
+             05  NUMDUPLICATA              PIC 9(03).
+             05  CODFORNECEDOR             PIC X(06).
+             05  DATAVENCIMENTO.
+                06 DIAVENC                 PIC 9(02).
+                06 MESVENC                 PIC 9(02).
+                06 ANOVENC                 PIC 9(04).
+      *-------------------------------------
+
+       FD  RELVENCIDA
+             LABEL RECORDS OMITTED.
+
+       01  REGPRINT PIC X(80).
+
+      *-------------------------------------
+
+       SD ARQSORT. 
+       01 REGSORT.
+             05  NUMDUPLICATASORT          PIC 9(03).
+             05  CODFORNECEDORSORT         PIC X(06).
+             05  DATAVENCIMENTOSORT.
+                06 DIAVENCSORT             PIC 9(02).
+                06 MESVENCSORT             PIC 9(02).
+                06 ANOVENCSORT             PIC 9(04).
+
+      *. . .,---.,---.|   /|,   .    ,---.--.--,---.,---.,---.,---.,---.
+      *| | ||   ||---'|__/ ||\  |    `---.  |  |   ||---'|---||  _.|--- 
+      *| | ||   ||  \ |  \ || \ |        |  |  |   ||  \ |   ||   ||    
+      *`-'-'`---'`   ``   ```  `'    `---'  `  `---'`   ``   '`---'`---'
+
+       WORKING-STORAGE   SECTION.
+       77  FIM     PIC X VALUE SPACES.
+       77  CT-LIN  PIC 9(02) VALUE  6. 
+       77  PAGINA  PIC 99 VALUE ZEROS.
+
+
+
+      *                   --------cabecalhos--------
+       01  CAB1.
+          05    FILLER     PIC  X(17)     VALUE    SPACES.
+          05    FILLER     PIC  X(32)     VALUE   
+           "RELATORIO DE DUPLICATAS VENCIDAS".
+          05    FILLER     PIC  X(13)     VALUE    SPACES.
+          05    FILLER     PIC  X(04)     VALUE   "PAG:".
+          05    PAGINACAB  PIC  Z9        VALUE   ZEROS.
+          05    FILLER     PIC  X(12)     VALUE   SPACES.   
+
+       01  CAB2.
+          05    FILLER     PIC  X(10)     VALUE    SPACES.
+          05    FILLER     PIC  X(19)     VALUE
+            "NUMERO DA DUPLICATA".
+          05    FILLER     PIC  X(13)     VALUE    SPACES.
+          05    FILLER     PIC  X(20)     VALUE
+            "CODIGO DO FORNECEDOR".
+          05    FILLER     PIC  X(18)     VALUE    SPACES.    
+
+       01  DET1.
+          05    FILLER     PIC  X(18)     VALUE    SPACES.
+          05    NUMDUPLICATACAB  PIC 999 VALUE ZEROS. 
+          05    FILLER     PIC  X(29)     VALUE    SPACES.
+          05    CODFORNECEDORCAB PIC X(06)  VALUE SPACES. 
+          05    FILLER     PIC  X(24)     VALUE    SPACES.
+
+
+      *████████████████████████████████████
+      *█▄─▄▄─█▄─▄▄▀█─▄▄─█─▄▄▄─█▄─▄▄─█▄─▄▄▀█
+      *██─▄▄▄██─▄─▄█─██─█─███▀██─▄█▀██─██─█
+      *▀▄▄▄▀▀▀▄▄▀▄▄▀▄▄▄▄▀▄▄▄▄▄▀▄▄▄▄▄▀▄▄▄▄▀▀
+
+       PROCEDURE DIVISION.
+
+       ROTINA-PRINCIPAL.
+           SORT   ARQSORT   ASCENDING   KEY   NUMDUPLICATASORT
+                          INPUT  PROCEDURE    ROTINA
+                          OUTPUT PROCEDURE    FIINAL.
+           STOP   RUN.
+
+       ROTINA.
+           OPEN INPUT DUPLICATAS.
+           PERFORM LEITURA. 
+           PERFORM SELECIONA UNTIL FIM EQUAL "*".
+           CLOSE DUPLICATAS.
+
+       LEITURA.
+           READ DUPLICATAS  AT END MOVE "*" TO   FIM. 
+        
+       SELECIONA.
+           IF  (ANOVENC   LESS  THAN 2020)
+               RELEASE     REGSORT     FROM    REGDUPLICATAS
+           ELSE
+               NEXT    SENTENCE.
+           PERFORM   LEITURA.
+    
+       LEITURASORT.
+             RETURN  ARQSORT  AT  END    MOVE  "*"  TO   FIM.
+
+       FIINAL. 
+           OPEN OUTPUT RELVENCIDA.
+           MOVE SPACES TO FIM. 
+           PERFORM LEITURASORT. 
+           PERFORM GERAREL UNTIL FIM EQUAL "*".
+           CLOSE RELVENCIDA.
+
+       GERAREL. 
+           IF  (CT-LIN  GREATER THAN 5)
+             ADD             1          TO     PAGINA
+             MOVE PAGINA TO PAGINACAB
+             WRITE  REGPRINT  FROM  CAB1  AFTER  ADVANCING  PAGE
+             WRITE  REGPRINT  FROM  CAB2  AFTER  ADVANCING  1  LINE
+             MOVE   1       TO    CT-LIN
+           ELSE
+             NEXT  SENTENCE.
+
+           MOVE    NUMDUPLICATASORT    TO  NUMDUPLICATACAB.
+           MOVE    CODFORNECEDORSORT    TO   CODFORNECEDORCAB.
+           WRITE   REGPRINT    FROM DET1  AFTER   ADVANCING   1   LINE.
+           ADD  1 TO     CT-LIN. 
+           PERFORM LEITURASORT.
+           
+*********************************************************************************************************************************************************************
+DUPLICATAS.DAT
+
+10022222201012019
+20033333301012021
+00144444401022019
+00955555520102022
+00399999930122018
+11022112201012019
+21033113301012018
+01144114401022017
+01955115520102022
+01399119930122016
+00200000130122015
+00700000530122021
+40088888801012022
+24577777701012014
+
+*********************************************************************************************************************************************************************
+OUTPUT - RELVENCIDA:
+
+                 RELATORIO DE DUPLICATAS VENCIDAS             PAG: 1            
+          NUMERO DA DUPLICATA             CODIGO DO FORNECEDOR                  
+                  001                             444444                        
+                  002                             000001                        
+                  003                             999999                        
+                  011                             441144                        
+                  013                             991199                        
+                 RELATORIO DE DUPLICATAS VENCIDAS             PAG: 2            
+          NUMERO DA DUPLICATA             CODIGO DO FORNECEDOR                  
+                  100                             222222                        
+                  110                             221122                        
+                  210                             331133                        
+                  245                             777777                        
+
