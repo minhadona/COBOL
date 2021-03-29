@@ -1,4 +1,1 @@
-# Jupyter Notebook
-.ipynb_checkpoints
-credentials.json
-log_*.txt
+* linguist-language=Cobol
